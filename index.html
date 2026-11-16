@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickBite - Food Ordering</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #fffaf7;
+    color: #292321;
+}
+
+/* NAVBAR */
+header {
+    background: white;
+    padding: 18px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px #ddd;
+}
+
+.logo {
+    color: #e85d36;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    margin: 0 12px;
+}
+
+button {
+    background: #e85d36;
+    color: white;
+    border: none;
+    padding: 11px 17px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #c94724;
+}
+
+/* HERO SECTION */
+.hero {
+    margin: 35px auto;
+    width: 86%;
+    padding: 55px;
+    border-radius: 20px;
+    background: #292321;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.hero h1 {
+    font-size: 45px;
+    margin: 15px 0;
+}
+
+.hero p {
+    color: #ddd;
+    margin-bottom: 22px;
+    line-height: 1.6;
+}
+
+.hero-image {
+    font-size: 110px;
+}
+
+/* MENU */
+.menu-section {
+    width: 86%;
+    margin: 40px auto;
+}
+
+.menu-section h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.filters {
+    margin-bottom: 25px;
+}
+
+.filters button {
+    margin: 5px;
+    border-radius: 25px;
+}
+
+.food-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+.food-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px #e5ddd8;
+}
+
+.food-image {
+    height: 155px;
+    background: #f5e9df;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 75px;
+}
+
+.food-details {
+    padding: 18px;
+}
+
+.food-details h3 {
+    margin-bottom: 8px;
+}
+
+.food-details p {
+    color: #777;
+    font-size: 13px;
+    margin-bottom: 14px;
+}
+
+.food-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+/* CART */
+.cart-section {
+    width: 86%;
+    margin: 45px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 3px 12px #e5ddd8;
+}
+
+.cart-section h2 {
+    margin-bottom: 15px;
+}
+
+.cart-item {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.cart-item button {
+    padding: 5px 10px;
+}
+
+.total {
+    font-size: 21px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.checkout input,
+.checkout select {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.checkout h3 {
+    margin-top: 15px;
+}
+
+.checkout button {
+    margin-top: 10px;
+}
+
+/* ORDER TRACKING */
+.tracking {
+    display: none;
+    width: 86%;
+    margin: 35px auto;
+    padding: 25px;
+    background: white;
+    border-radius: 15px;
+}
+
+.tracking h2 {
+    margin-bottom: 12px;
+}
+
+.status {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.status span {
+    background: #eee;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.status .active {
+    background: #d9f4e5;
+    color: #16845b;
+    font-weight: bold;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #777;
+    margin-top: 30px;
+}
+
+@media(max-width:750px) {
+    .hero {
+        padding: 30px;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+    }
+
+    .food-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width:500px) {
+    nav {
+        display: none;
+    }
+
+    .food-container {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-image {
+        display: none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header>
+    <div class="logo">QuickBite 🍴</div>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#menu">Menu</a>
+        <a href="#cart">Cart</a>
+    </nav>
+
+    <button onclick="scrollToCart()">
+        🛒 Cart (<span id="cartCount">0</span>)
+    </button>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+    <div>
+        <h4>FRESH • FAST • DELICIOUS</h4>
+
+        <h1>Your cravings,<br>delivered.</h1>
+
+        <p>
+            Discover delicious food from your favourite menu.
+            Order online and enjoy fresh meals delivered to you.
+        </p>
+
+        <button onclick="scrollToMenu()">
+            Explore Menu
+        </button>
+    </div>
+
+    <div class="hero-image">🍕 🍔</div>
+</section>
+
+<!-- MENU -->
+<section class="menu-section" id="menu">
+
+    <h2>Popular Food Menu</h2>
+
+    <div class="filters">
+        <button onclick="filterFood('All')">All</button>
+        <button onclick="filterFood('Meals')">Meals</button>
+        <button onclick="filterFood('Snacks')">Snacks</button>
+        <button onclick="filterFood('Drinks')">Drinks</button>
+    </div>
+
+    <div class="food-container" id="foodContainer"></div>
+
+</section>
+
+<!-- CART -->
+<section class="cart-section" id="cart">
+
+    <h2>Your Shopping Cart 🛒</h2>
+
+    <div id="cartItems">
+        Your cart is empty.
+    </div>
+
+    <div id="checkout" style="display:none">
+
+        <div class="total">
+            Subtotal: ₹<span id="subtotal">0</span>
+            <br><br>
+            Delivery Fee: ₹30
+            <br><br>
+            Grand Total: ₹<span id="total">0</span>
+        </div>
+
+        <div class="checkout">
+
+            <h3>Delivery Details</h3>
+
+            <input
+                type="text"
+                id="address"
+                placeholder="Enter delivery address"
+            >
+
+            <h3>Payment Method</h3>
+
+            <select id="payment">
+                <option value="UPI">UPI Payment</option>
+                <option value="Card">Credit / Debit Card</option>
+                <option value="COD">Cash on Delivery</option>
+            </select>
+
+            <button onclick="placeOrder()">
+                Place Order
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ORDER TRACKING -->
+<section class="tracking" id="tracking">
+
+    <h2>Order Tracking 📦</h2>
+
+    <p id="orderMessage">Order placed successfully!</p>
+
+    <div class="status" id="status">
+        <span class="active">Placed</span>
+        <span>Accepted</span>
+        <span>Preparing</span>
+        <span>On the way</span>
+        <span>Delivered</span>
+    </div>
+
+    <button onclick="advanceOrder()">
+        Update Order Status
+    </button>
+
+</section>
+
+<footer>
+    © 2026 QuickBite | Online Food Ordering System
+</footer>
+
+<script>
+
+// FOOD DATABASE
+const foods = [
+    {
+        id: 1,
+        name: "Margherita Pizza",
+        price: 249,
+        category: "Meals",
+        emoji: "🍕",
+        description: "Cheesy pizza with fresh basil."
+    },
+    {
+        id: 2,
+        name: "Veg Burger",
+        price: 149,
+        category: "Meals",
+        emoji: "🍔",
+        description: "Crispy vegetable burger."
+    },
+    {
+        id: 3,
+        name: "Paneer Wrap",
+        price: 179,
+        category: "Meals",
+        emoji: "🌯",
+        description: "Delicious paneer wrap."
+    },
+    {
+        id: 4,
+        name: "French Fries",
+        price: 99,
+        category: "Snacks",
+        emoji: "🍟",
+        description: "Golden crispy fries."
+    },
+    {
+        id: 5,
+        name: "Brownie",
+        price: 119,
+        category: "Snacks",
+        emoji: "🍫",
+        description: "Rich chocolate brownie."
+    },
+    {
+        id: 6,
+        name: "Cold Coffee",
+        price: 89,
+        category: "Drinks",
+        emoji: "🥤",
+        description: "Refreshing cold coffee."
+    }
+];
+
+let cart = {};
+let orderStage = 0;
+
+// DISPLAY FOOD
+function displayFood(category = "All") {
+
+    const container = document.getElementById("foodContainer");
+
+    const filtered = foods.filter(food =>
+        category === "All" || food.category === category
+    );
+
+    container.innerHTML = filtered.map(food => `
+
+        <div class="food-card">
+
+            <div class="food-image">
+                ${food.emoji}
+            </div>
+
+            <div class="food-details">
+
+                <h3>${food.name}</h3>
+
+                <p>${food.description}</p>
+
+                <div class="food-bottom">
+
+                    <span class="price">
+                        ₹${food.price}
+                    </span>
+
+                    <button onclick="addToCart(${food.id})">
+                        Add +
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    `).join("");
+}
+
+// FILTER FOOD
+function filterFood(category) {
+    displayFood(category);
+}
+
+// ADD TO CART
+function addToCart(id) {
+
+    cart[id] = (cart[id] || 0) + 1;
+
+    updateCart();
+}
+
+// CHANGE QUANTITY
+function changeQuantity(id, change) {
+
+    cart[id] += change;
+
+    if (cart[id] <= 0) {
+        delete cart[id];
+    }
+
+    updateCart();
+}
+
+// UPDATE CART
+function updateCart() {
+
+    const container = document.getElementById("cartItems");
+
+    const count = Object.values(cart)
+        .reduce((a, b) => a + b, 0);
+
+    document.getElementById("cartCount").innerText = count;
+
+    const selected = foods.filter(food => cart[food.id]);
+
+    if (selected.length === 0) {
+
+        container.innerHTML = "Your cart is empty.";
+
+        document.getElementById("checkout").style.display = "none";
+
+        return;
+    }
+
+    container.innerHTML = selected.map(food => `
+
+        <div class="cart-item">
+
+            <div>
+                <strong>${food.name}</strong>
+                <br>₹${food.price}
+            </div>
+
+            <div>
+                <button onclick="changeQuantity(${food.id},-1)">-</button>
+
+                ${cart[food.id]}
+
+                <button onclick="changeQuantity(${food.id},1)">+</button>
+            </div>
+
+        </div>
+
+    `).join("");
+
+    const subtotal = selected.reduce(
+        (sum, food) => sum + food.price * cart[food.id], 0
+    );
+
+    document.getElementById("subtotal").innerText = subtotal;
+
+    document.getElementById("total").innerText = subtotal + 30;
+
+    document.getElementById("checkout").style.display = "block";
+}
+
+// STRATEGY PATTERN
+// Separate strategy for every payment method.
+
+const paymentStrategies = {
+
+    UPI: {
+        pay: amount => "UPI payment of ₹" + amount + " simulated successfully."
+    },
+
+    Card: {
+        pay: amount => "Card payment of ₹" + amount + " simulated successfully."
+    },
+
+    COD: {
+        pay: amount => "Cash on Delivery selected. Pay ₹" + amount + " on delivery."
+    }
+
+};
+
+// FACTORY PATTERN
+// Creates different user types.
+
+class UserFactory {
+
+    createUser(type, name) {
+
+        if (type === "Customer") {
+            return {role: "Customer", name: name};
+        }
+
+        if (type === "Admin") {
+            return {role: "Admin", name: name};
+        }
+
+        throw new Error("Invalid user type");
+    }
+
+}
+
+// OBSERVER PATTERN
+// Notifies listeners whenever order status changes.
+
+class OrderSubject {
+
+    constructor() {
+        this.listeners = [];
+    }
+
+    subscribe(callback) {
+        this.listeners.push(callback);
+    }
+
+    notify(status) {
+        this.listeners.forEach(callback => callback(status));
+    }
+
+}
+
+const orderSubject = new OrderSubject();
+
+orderSubject.subscribe(status => {
+
+    document.getElementById("orderMessage").innerText =
+        "Your order status: " + status;
+
+});
+
+// STATE PATTERN
+// Controls the order stages.
+
+const orderStates = [
+    "Placed",
+    "Accepted",
+    "Preparing",
+    "On the way",
+    "Delivered"
+];
+
+// PLACE ORDER
+function placeOrder() {
+
+    const address = document.getElementById("address").value;
+
+    if (address.trim() === "") {
+        alert("Please enter your delivery address.");
+        return;
+    }
+
+    const selected = foods.filter(food => cart[food.id]);
+
+    if (selected.length === 0) {
+        alert("Your cart is empty.");
+        return;
+    }
+
+    const subtotal = selected.reduce(
+        (sum, food) => sum + food.price * cart[food.id], 0
+    );
+
+    const total = subtotal + 30;
+
+    const paymentMethod =
+        document.getElementById("payment").value;
+
+    const strategy = paymentStrategies[paymentMethod];
+
+    const paymentResult = strategy.pay(total);
+
+    const customer = new UserFactory()
+        .createUser("Customer", "Guest Customer");
+
+    orderStage = 0;
+
+    orderSubject.notify(orderStates[orderStage]);
+
+    alert(
+        "Order placed successfully!\n" +
+        paymentResult
+    );
+
+    document.getElementById("tracking").style.display = "block";
+
+    updateTracking();
+
+    cart = {};
+
+    updateCart();
+
+    document.getElementById("tracking")
+        .scrollIntoView({behavior: "smooth"});
+
+}
+
+// UPDATE ORDER STATUS
+function advanceOrder() {
+
+    if (orderStage < orderStates.length - 1) {
+
+        orderStage++;
+
+        orderSubject.notify(orderStates[orderStage]);
+
+        updateTracking();
+
+    } else {
+
+        alert("Order already delivered!");
+
+    }
+
+}
+
+// TRACKING DISPLAY
+function updateTracking() {
+
+    const steps = document.querySelectorAll(".status span");
+
+    steps.forEach((step, index) => {
+
+        step.classList.toggle("active", index <= orderStage);
+
+    });
+
+}
+
+// NAVIGATION
+function scrollToMenu() {
+
+    document.getElementById("menu")
+        .scrollIntoView({behavior: "smooth"});
+
+}
+
+function scrollToCart() {
+
+    document.getElementById("cart")
+        .scrollIntoView({behavior: "smooth"});
+
+}
+
+// INITIALIZE WEBSITE
+displayFood();
+
+updateCart();
+
+</script>
+
+</body>
+</html>
